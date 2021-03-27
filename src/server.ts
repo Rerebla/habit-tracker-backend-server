@@ -13,6 +13,7 @@ import { verify } from "jsonwebtoken";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { createAccessToken, createRefreshToken } from "./auth";
 import User from './entity/user';
+import { CONFIG } from './config';
 
 (async () => {
     const app = express();
@@ -35,7 +36,7 @@ import User from './entity/user';
         }
         let payload: any = null;
         try {
-            payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
+            payload = verify(token, CONFIG.refreshTokenSecret);
         } catch (err) {
             console.log("RefreshTokenErr: ", err);
             return res.send({

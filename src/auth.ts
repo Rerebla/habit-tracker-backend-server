@@ -1,9 +1,10 @@
 import User from "./entity/user";
 import { sign } from "jsonwebtoken";
+import { CONFIG } from './config';
 
 export const createAccessToken = (user: User) => {
     console.log("New access token was generated");
-    return sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET!, {
+    return sign({ userId: user.id }, CONFIG.accessTokenSecret, {
         expiresIn: "15m"
     });
 };
@@ -11,7 +12,7 @@ export const createAccessToken = (user: User) => {
 export const createRefreshToken = (user: User) => {
     const refresh_token = sign(
         { userId: user.id, tokenVersion: user.tokenVersion },
-        process.env.REFRESH_TOKEN_SECRET!,
+        CONFIG.refreshTokenSecret,
         {
             expiresIn: "7d"
         }

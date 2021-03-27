@@ -20,6 +20,7 @@ import { verify } from "jsonwebtoken";
 import { addPermissions } from './permissionSystem/addPermissionsMiddleware';
 import { addPermissionToUser } from './permissionSystem/addPermissionToUser';
 import { getPermissionsOfUser } from './permissionSystem/getPermissionsOfUser';
+import { CONFIG } from './config';
 
 @ObjectType()
 class LoginResponse {
@@ -57,7 +58,7 @@ export class UserResolver {
 
         try {
             const token = authorization.split(" ")[1];
-            const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+            const payload: any = verify(token, CONFIG.accessTokenSecret);
             return User.findOne(payload.userId);
         } catch (err) {
             console.log(err);
