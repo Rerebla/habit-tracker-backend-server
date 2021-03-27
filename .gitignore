@@ -115,3 +115,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 techstack.info
+uninstall.info
+src/config.ts
+ormconfig.json
