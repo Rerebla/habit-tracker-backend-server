@@ -3,7 +3,6 @@ import { sign } from "jsonwebtoken";
 import { CONFIG } from './config';
 
 export const createAccessToken = (user: User) => {
-    console.log("New access token was generated");
     return sign({ userId: user.id }, CONFIG.accessTokenSecret, {
         expiresIn: "15m"
     });

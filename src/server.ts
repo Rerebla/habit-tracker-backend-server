@@ -25,10 +25,8 @@ import { CONFIG } from './config';
     );
     app.use(cookieParser());
     app.post("/refresh_token", async (req, res) => {
-        console.log("Request was received with cookie: ", req.cookies.jid);
         const token = req.cookies.jid;
         if (!token) {
-            console.log("not token nooooooo");
             return res.send({
                 ok: false,
                 accessToken: ""

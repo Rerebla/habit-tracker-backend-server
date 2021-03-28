@@ -2,7 +2,7 @@ import { verify } from 'jsonwebtoken';
 import { MiddlewareFn } from 'type-graphql';
 
 import { MyContext } from '../MyContext';
-import { getPermissionsOfUser } from './getPermissionsOfUser';
+import { getAllPermissionsOfUser } from './getAllPermissionOfUser';
 
 export const addPermissions: MiddlewareFn<MyContext> = async ({ context }, next) => {
     const authorization = context.req.headers["authorization"];
@@ -11,7 +11,7 @@ export const addPermissions: MiddlewareFn<MyContext> = async ({ context }, next)
     }
     const userId = context.payload?.userId || (verify(authorization.split(" ")[1], process.env.ACCESS_TOKEN_SECRET!) as any).userId;
     context.payload = { userId: userId };
-    context.permissions = await getPermissionsOfUser(userId);
+    context.permissions = await getAllPermissionsOfUser(userId);
 
     return next();
 };

@@ -1,6 +1,0 @@
-type Query {
-  helloWorld(sauce: String): String!
-  suppe: Int
-  signUp(userName: String!, emailAdress: String!, password: String!): String!
-  login(emailAdress: String!, password: String!): String!
-}

@@ -38,7 +38,8 @@ export class UserResolver {
 
     @Query(() => String)
     @UseMiddleware(isAuth)
-    bye(@Ctx() { payload }: MyContext) {
+    bye(
+        @Ctx() { payload }: MyContext) {
         console.log(payload);
         return `your user id is: ${payload!.userId}`;
     }
@@ -49,9 +50,9 @@ export class UserResolver {
     }
 
     @Query(() => User, { nullable: true })
-    me(@Ctx() context: MyContext) {
+    me(
+        @Ctx() context: MyContext) {
         const authorization = context.req.headers["authorization"];
-
         if (!authorization) {
             return null;
         }
@@ -67,14 +68,16 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    async logout(@Ctx() { res }: MyContext) {
+    async logout(
+        @Ctx() { res }: MyContext) {
         sendRefreshToken(res, "");
 
         return true;
     }
 
     @Mutation(() => Boolean)
-    async revokeRefreshTokensForUser(@Arg("userId", () => Int) userId: number) {
+    async revokeRefreshTokensForUser(
+        @Arg("userId", () => Int) userId: number) {
         await getConnection()
             .getRepository(User)
             .increment({ id: userId }, "tokenVersion", 1);
@@ -91,19 +94,18 @@ export class UserResolver {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            throw new Error("could not find user");
+            throw new Error("Username or Password invalid!");
         }
 
         const valid = await compare(password, user.password);
 
         if (!valid) {
-            throw new Error("bad password");
+            throw new Error("Username or Password invalid!");
         }
 
         // login successful
 
         sendRefreshToken(res, createRefreshToken(user));
-        console.log("refreshtoken should be sent");
         return {
             accessToken: createAccessToken(user),
             user
@@ -132,23 +134,21 @@ export class UserResolver {
 
     @Query(() => [String])
     @UseMiddleware(addPermissions)
-    async getPermissions(@Ctx() { permissions }: MyContext) {
+    async getPermissions(
+        @Ctx() { permissions }: MyContext) {
         if (permissions) return permissions;
         return [];
     }
 
     @Mutation(() => [String])
     @UseMiddleware(addPermissions)
-    async addPermission(@Ctx() { payload }: MyContext, @Arg("permission") permission: string) {
+    async addPermission(
+        @Ctx() { payload }: MyContext,
+        @Arg("permission") permission: string) {
         if (!payload) {
             return [];
         }
         await addPermissionToUser(permission, payload.userId);
         return getPermissionsOfUser(payload.userId);
     }
-    // @UseMiddleware(isAuth)
-    // bye(@Ctx() { payload }: MyContext) {
-    //     console.log(payload);
-    //     return `your user id is: ${payload!.userId}`;
-    // }
 }
